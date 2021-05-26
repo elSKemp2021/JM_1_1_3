@@ -9,7 +9,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     UserDao ud = new UserDaoJDBCImpl();
-    // UserDao ud = new UserDaoHibernateImpl();
+        // UserDao ud = new UserDaoHibernateImpl();
 
     public void createUsersTable() throws ClassNotFoundException {
         ud.createUsersTable();

@@ -1,17 +1,19 @@
 package jm.task.core.jdbc.util;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 
+import com.mysql.fabric.jdbc.FabricMySQLDriver;
 import jm.task.core.jdbc.model.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-
+import static java.sql.DriverManager.getConnection;
 
 
 public class Util {
@@ -21,10 +23,12 @@ public class Util {
     private static final String PASSWORD = "root";
     public static SessionFactory sessionFactory;
 
-    public static Connection connectDB() throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
+    public static Connection connectDB() throws ClassNotFoundException, SQLException {
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
         Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
         return connection;
+
     }
 
     public static SessionFactory getSessionFactory() {

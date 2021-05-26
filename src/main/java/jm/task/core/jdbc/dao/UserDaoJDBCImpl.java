@@ -2,12 +2,13 @@ package jm.task.core.jdbc.dao;
 
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import static jm.task.core.jdbc.util.Util.connectDB;
 
 public class UserDaoJDBCImpl implements UserDao {
 
@@ -16,8 +17,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() throws ClassNotFoundException {
-        try (Statement statement = Util.connectDB().createStatement()) {
-            statement.execute("CREATE TABLE IF NOT EXISTS User " +
+        try (Statement statement = connectDB().createStatement()) {
+            statement.execute("CREATE TABLE IF NOT EXISTS user " +
                    "(id INT(3) primary key not null auto_increment," +             "name VARCHAR(50) not null," +
                    "lastName VARCHAR(20)," +
                    "age INT(3) )");
@@ -27,16 +28,16 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() throws ClassNotFoundException {
-        try (Statement statement = Util.connectDB().createStatement()) {
-            statement.execute("DROP TABLE IF EXISTS User");
+        try (Statement statement = connectDB().createStatement()) {
+            statement.execute("DROP TABLE IF EXISTS user");
         } catch (SQLException e) {
             System.out.println("Дроптэйбл экзепшн");
         }
     }
 
     public void saveUser(String name, String lastName, byte age) throws ClassNotFoundException {
-        try (Statement statement = Util.connectDB().createStatement()) {
-            statement.executeUpdate(String.format("INSERT INTO User (name, lastName, age) " +
+        try (Statement statement = connectDB().createStatement()) {
+            statement.executeUpdate(String.format("INSERT INTO userdb.user (name, lastName, age) " +
                     "VALUES(%s, %s, %d)", name, lastName, age));
             System.out.printf("User named %s added successfully\n", name);
         } catch (SQLException e) {
@@ -46,8 +47,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) throws ClassNotFoundException {
-        try (Statement statement = Util.connectDB().createStatement()) {
-            statement.executeUpdate(String.format("DELETE FROM User WHERE id = %d", id));
+        try (Statement statement = connectDB().createStatement()) {
+            statement.executeUpdate(String.format("DELETE FROM user WHERE id = %d", id));
         } catch (SQLException e) {
             System.out.println("Удаление юзера экзепшн");
         }
@@ -55,8 +56,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public List<User> getAllUsers() throws ClassNotFoundException {
         List<User> list = new ArrayList<>();
-        try (Statement statement = Util.connectDB().createStatement()) {
-            ResultSet rs = statement.executeQuery("SELECT * FROM users.User");
+        try (Statement statement = connectDB().createStatement()) {
+            ResultSet rs = statement.executeQuery("SELECT * FROM userdb.user");
             while (rs.next()) {
                 // какой ещё есть способ?
                 String name = rs.getString("name");
@@ -75,7 +76,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() throws ClassNotFoundException {
-        try (Statement statement = Util.connectDB().createStatement()) {
+        try (Statement statement = connectDB().createStatement()) {
             statement.executeUpdate("TRUNCATE TABLE user");
         } catch (SQLException e) {
             System.out.println("Транкейт экзепшн");

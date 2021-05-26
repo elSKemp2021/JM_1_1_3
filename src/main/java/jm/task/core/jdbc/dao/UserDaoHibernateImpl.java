@@ -22,7 +22,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void createUsersTable() {
         Session session = Util.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        // нужен ли здесь автоинкремент у айди, если он прописан в аннотации?
+
         session.createSQLQuery("CREATE TABLE IF NOT EXISTS User" +
                 "(id INT(3) PRIMARY KEY NOT NULL AUTO_INCREMENT," +
                 "name VARCHAR(20) NOT NULL," +
@@ -54,8 +54,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void removeUserById(long id) {
         Session session = Util.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        // здесь serializable может быть поле, метод, класс?(2 параметр)
-        //session.delete(String.format("FROM User WHERE id = %d", id));
+
         session.delete(session.get(User.class, id));
         transaction.commit();
         session.close();
